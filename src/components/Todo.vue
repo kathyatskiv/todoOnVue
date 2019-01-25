@@ -1,7 +1,7 @@
 <template>
   <div class="todo">
     <h1 :class="{today: this.change == 0}">{{ day }}</h1>
-    <todo-form @save="save" @updItem="updateItem" :change="change" :edit="edit" :value.sync="value"/>
+    <todo-form @save="save" @updItem="updateItem" :change="change" :edit="edit" :value.sync="value" :time.sync="timeValue"/>
     <todo-list v-if="currentTodos.length > 0" @delFrom="deleteFromBase" @edItem="editItem" @chekItem="chekItem" :currentTodos="currentTodos"/>
     <p v-else class="message">No task for this day</p>
     <div class="btn--container">
@@ -29,6 +29,7 @@ export default {
   data: () =>({
       todos: [],
       value: "",
+      timeValue: "",
       currentTodos: [],
       change: 0,
       day: '',
@@ -76,17 +77,22 @@ export default {
       this.day = months[a.getMonth()] + " " + a.getDate() + " " + a.getFullYear();
     },
     save(todo){
+      this.value = '';
       db.collection('todos').add(todo);
     },
     deleteFromBase(todo){
       db.collection('todos').doc(todo.id).delete();
     },
     editItem(el){
+      console.log(el.time);
       this.value = el.task;
       this.edit = el.id;
+      this.timeValue = el.time;
     },
     updateItem(el){
       this.value = '';
+      this.time = '';
+      this.edit = '';
       db.collection('todos').doc(el.id).update({task: el.task, time: { nanoseconds: 0, seconds: Math.floor( el.time / 1000) } } );
       this.dayTasks();
     },
@@ -98,7 +104,6 @@ export default {
       });
     },
     chekItem(todo){
-      console.log(this.todos);
       const t = {
         ...todo,
         isActive: !todo.isActive

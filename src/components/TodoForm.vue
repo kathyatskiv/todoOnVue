@@ -1,7 +1,7 @@
 <template>
     <div class="form--container">
         <form action="" class="form" @submit.prevent="submit">
-            <input class="form__task" type="text"  placeholder="Please add task" :value="value" @input="updateValue" required>
+            <input class="form__task" type="text"  placeholder="Please add task" :value="value" :time="time" @input="updateValue" required>
             <input class="form__time" type="time" placeholder="Please select time" v-model="time" required>
             <button class="form__btn">
                 <i class="material-icons">send</i>
@@ -13,9 +13,8 @@
 <script>
 
 export default {
-    props: ["value", "change", "edit"],
+    props: ["value", "change", "edit", "time"],
     data: () =>({
-        time: ''
     }),
     methods: {
         submit(){
@@ -30,7 +29,9 @@ export default {
         },
         updateValue(ev) {
             const value = ev.target.value;
+            const time = ev.target.time;
             this.$emit("update:value", value);
+            this.$emit("update:time", time);
         } ,
         setTime(time){
             const day = Date.now();
@@ -66,8 +67,8 @@ export default {
         }
     },
     watch: {
-        value(newValue, oldValue){
-            console.log(this.value);
+        time(newValue, oldValue){
+            console.log(this.time);
         }
     }
 }

@@ -57,6 +57,7 @@ export default {
 
         &.active{
             opacity: .5;
+            cursor: not-allowed;
         }
     }
 
