@@ -1,8 +1,8 @@
 <template>
     <div class="form--container">
-        <form action="" class="form" @submit.prevent="submit">
-            <input class="form__task" type="text"  placeholder="Please add task" :value="value" :time="time" @input="updateValue" required>
-            <input class="form__time" type="time" placeholder="Please select time" v-model="time" required>
+        <form class="form " @submit.prevent="submit">
+            <input class="form__task" type="text"  placeholder="Please add task ..." :value="value" :time="time" @input="updateValue" required>
+            <input class="form__time" type="time" v-model="time" required>
             <button class="form__btn">
                 <i class="material-icons">send</i>
             </button>
@@ -14,11 +14,8 @@
 
 export default {
     props: ["value", "change", "edit", "time"],
-    data: () =>({
-    }),
     methods: {
         submit(){
-        console.log(this.edit);
             if(this.edit.length > 0){
                 this.editItem(this.edit);
             }
@@ -48,10 +45,9 @@ export default {
                 task: this.value,
                 time: { seconds: Math.floor(taskTime / 1000), "nanoseconds": 0 },
                 isComplete: day > taskTime,
-                isActive: false
+                isActive: false,
+                isEdit: false
             };
-            this.value = "";
-            this.time = "";
             this.$emit("save", body);
         },
         editItem(id){
@@ -60,15 +56,7 @@ export default {
                 task: this.value,
                 time: this.setTime(this.time)
             }
-            this.value='';
-            this.edit='';
-            this.time='';
             this.$emit("updItem", body);
-        }
-    },
-    watch: {
-        time(newValue, oldValue){
-            console.log(this.time);
         }
     }
 }
@@ -80,9 +68,13 @@ export default {
         align-items: center;
         border: 1px solid #e5e5e5;
         border-radius: 5px;
-        width: 350px;
+        width: 100%;
         display: flex;
         justify-content: space-between;
+    }
+
+    .form__task{
+        flex: 1 0;
     }
 
     .form__task, .form__time{

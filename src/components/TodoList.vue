@@ -1,14 +1,14 @@
 <template>
     <div class="list--container">
         <ul class="list">
-            <li class="list__item" v-for="(todo, key) in currentTodos" :key="key" :class="{ active: todo.isComplete }">
-                <input class="list__isComplete" type="checkbox" @change="onChange(todo)" :value="todo.isActive">
-                <h3 class="list__task" :class="{cross: todo.isActive}" >{{ todo.task }}</h3>
+            <li class="list__item" v-for="(todo, key) in currentTodos" :key="key" :class="itemClass(todo)">
+                <input class="list__isComplete" type="checkbox" @change="onChange(todo)" :checked="todo.isActive" >
+                <span class="list__task" :class="{cross: todo.isActive}">{{ todo.task }}</span>
                 <span class="list__time">{{ todo.realTime }}</span>
-                <button class="list__btn delete" @click="deleteItem(todo)">
-                    <i class="material-icons">delete_sweep</i>
+                <button class="matter-button-contained list__btn delete" @click="deleteItem(todo)">
+                    <i class="material-icons">delete</i>
                 </button>
-                <button class="list__btn edit" @click="editItem(todo)">
+                <button class="matter-button-contained list__btn edit" :class="{disactive: todo.isActive}" @click="editItem(todo)" :disabled="todo.isComplete">
                     <i class="material-icons">create</i>
                 </button>
             </li>
@@ -19,18 +19,24 @@
 <script>
 
 export default {
-    data: () => ({ 
-    }),
-    props: [ "currentTodos"],
+    props: [ "currentTodos", "edit"],
     methods: {
         deleteItem(el){
             this.$emit("delFrom", el);
         },
         editItem(el){
-            this.$emit("edItem", el);
+            if(!el.isActive){
+                this.$emit("edItem", el);
+            }
         },
         onChange(el){
             this.$emit("chekItem", el);
+        },
+        itemClass(el){
+            return {
+                active: el.isComplete, 
+                isEdit: el.id === this.edit 
+            }
         }
     }
 }
@@ -38,14 +44,13 @@ export default {
 
 <style lang="scss" scoped>
     .list--container{
-        width: 350px;
+        width: 100%;
     }
 
     .list{
         margin: 0;
         padding: 0;
         list-style: none;
-        width: 350px;
     }
     
     .list__item{
@@ -53,26 +58,52 @@ export default {
         align-items: center;
         padding: 0 10px;
         border-radius: 5px;
-        margin-top: 5px; 
+        margin-top: 10px; 
+        width: 100%;
+        height: 50px;
 
         &.active{
             opacity: .5;
-            cursor: not-allowed;
+
+            .edit{
+                cursor: not-allowed;
+            }
+
+            .delete{
+                color: rgba(var(--matter-onsurface-rgb, 0, 0, 0), 0.38);
+                background-color: rgba(var(--matter-onsurface-rgb, 0, 0, 0), 0.12);
+                box-shadow: none;
+            }
+        }
+
+        &.isEdit{
+            background: rgba($color: #D85C7E, $alpha: .3)
         }
     }
 
     .list__isComplete{
-        width: 15px;
-        height: 15px;
+        appearance: none;
+        width: 20px;
+        height: 20px;
         margin-right: 5px;
-        border: 1px solid black;
-        background: transparent;   
+        border: 2px solid lightskyblue;
+        border-radius: 25%;
+        background: transparent;
+        box-shadow: none;
+        transition: background .1s linear;
+
+        &:checked{
+            background: lightskyblue;
+        }
     }
     
     .list__task{
         display: inline-block;
         margin-right: auto;
         position: relative;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-weight: 100;
+        font-size: 18px;
         
         &::after{
             content: '';
@@ -85,7 +116,7 @@ export default {
             width: 100%;
             height: 1px;
             position: absolute;
-            top: 50%;
+            top: 55%;
             left: 0;
             background: black;
         }
@@ -105,11 +136,15 @@ export default {
     }
 
     .edit{
-        background: green;
+        background:rgba($color:  green, $alpha: .7);
+
+        &.disactive{
+            cursor: not-allowed;
+        }
     }
 
     .delete{
-        background: red;
+        background: rgba($color:  red, $alpha: .7);
     }
 
 </style>

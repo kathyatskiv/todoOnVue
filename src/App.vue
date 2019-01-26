@@ -16,8 +16,14 @@ export default {
 </script>
 
 <style lang="scss">
+@import "./assets/materials.css";
   *{
     box-sizing: border-box;
+  }
+
+  .app{
+    display: flex;
+    justify-content: center;
   }
 
 </style>
