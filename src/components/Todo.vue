@@ -1,13 +1,13 @@
 <template>
   <div class="todo">
     <h1 :class="{today: this.change == 0}" class="currentDay">{{ day }}</h1>
-    <todo-form @save="save" @updItem="updateItem" :change="change" :edit="edit" :value.sync="value" :time.sync="timeValue"/>
+    <todo-form @save="save" @updItem="updateItem" :change="change" :edit="edit" :value.sync="value" :time.sync="time" />
     <todo-list v-if="currentTodos.length > 0" @delFrom="deleteFromBase" @edItem="editItem" @chekItem="chekItem" :currentTodos="currentTodos" :edit="edit"/>
     <p v-else class="message">No task for this day</p>
     <div class="btn--container">
-      <button class="matter-button-outlined previous" @click="change--; complete(); dayTasks(); whatDay(); ">Previous day</button>
+      <button class="matter-button-outlined previous" @click="change--;">Previous day</button>
       <day-founder @goToDay="goToDay"/>
-      <button class="matter-button-outlined next" @click="change++; complete(); dayTasks(); whatDay();">Next day</button>
+      <button class="matter-button-outlined next" @click="change++;">Next day</button>
     </div>
   </div>
 </template>
@@ -32,7 +32,7 @@ export default {
   data: () =>({
       todos: [],
       value: "",
-      timeValue: "",
+      time: "",
       currentTodos: [],
       change: 0,
       day: '',
@@ -45,6 +45,11 @@ export default {
   },
   watch: {
     todos(newValue, oldValue) {
+      this.complete();
+      this.dayTasks();
+      this.whatDay();
+    },
+    change(newValue, oldValue){
       this.complete();
       this.dayTasks();
       this.whatDay();
@@ -120,9 +125,7 @@ export default {
       const secondsNow = Math.floor(now.getTime()/1000);
       const change = Math.floor((secondsNow - seconds)/3600/24);
       this.change = -change;
-      this.dayTasks();
-      this.whatDay();
-      this.complete();
+
     }
   }
 }

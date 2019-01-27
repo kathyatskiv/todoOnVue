@@ -1,6 +1,6 @@
 <template>
     <form class="form"  @submit.prevent="submit">
-        <label class="matter-textfield-filled form__label">
+        <label class="matter-textfield-standard form__label">
             <input class="form__input" type="date" v-model="date" placeholder=" " required/>
             <span class="form__placeholder">Go to day</span>
         </label>   

@@ -1,8 +1,8 @@
 <template>
     <div class="form--container">
         <form class="form " @submit.prevent="submit">
-            <input class="form__task" type="text"  placeholder="Please add task ..." :value="value" :time="time" @input="updateValue" required>
-            <input class="form__time" type="time" v-model="time" required>
+            <input class="form__task" type="text"  placeholder="Please add task ..." :value="value" @input="updateValue" required>
+            <input class="form__time" type="time" :value="time" @input="updateTime" required>
             <button class="form__btn">
                 <i class="material-icons">send</i>
             </button>
@@ -26,10 +26,12 @@ export default {
         },
         updateValue(ev) {
             const value = ev.target.value;
-            const time = ev.target.time;
             this.$emit("update:value", value);
+        },
+        updateTime(ev) {
+            const time = ev.target.value;
             this.$emit("update:time", time);
-        } ,
+        },
         setTime(time){
             const day = Date.now();
             const a = new Date(day);
@@ -96,7 +98,6 @@ export default {
         background: transparent;
         display: flex;
         align-items: center;
-        // transform: translateY(-50%);
         color: blue;
     }
 </style>
