@@ -23,6 +23,7 @@ export default {
             const day = this.date[8] + this.date[9];
             const date = new Date(year, month-1, day);
             this.$emit("goToDay", date)
+            this.date = '';
         }
 
     }

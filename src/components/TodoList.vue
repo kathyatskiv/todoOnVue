@@ -77,7 +77,7 @@ export default {
         }
 
         &.isEdit{
-            background: rgba($color: #D85C7E, $alpha: .3)
+            background: rgba($color: yellow, $alpha: .3)
         }
     }
 
